@@ -1,9 +1,9 @@
 {
   "name": "jxscout-chrome",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
-  "description": "Manifest V3 Chrome DevTools integration for JXScout",
+  "description": "Manifest V3 Chrome integration for JXScout",
   "scripts": {
     "test": "node --test",
     "check": "node scripts/check.mjs",

@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>JXScout</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header><strong>JXScout</strong><button id="toggle" type="button" aria-pressed="false" disabled>Off</button></header>
+  <label for="host">Host</label><input id="host" type="text" value="localhost" spellcheck="false" autocomplete="off">
+  <label for="port">Port</label><input id="port" type="number" min="1" max="65535" value="3333">
+  <p id="error" role="alert" hidden></p>
+  <script type="module" src="popup.js"></script>
+</body></html>

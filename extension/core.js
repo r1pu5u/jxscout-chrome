@@ -1,14 +1,13 @@
-export const ENDPOINT = 'http://localhost:3333/caido-ingest';
 export const MAX_BYTES = 5 * 1024 * 1024;
 export const byteLength = value => new TextEncoder().encode(value).length;
 
-export function shouldCapture(entry) {
+export function shouldCapture(entry, endpoint) {
   let url;
   try { url = new URL(entry.request.url); } catch { return false; }
   if (!['http:', 'https:'].includes(url.protocol) || entry.response.status !== 200 || entry.request.method !== 'GET') return false;
-  if (['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && url.port === '3333') return false;
-  const mime = entry.response.content?.mimeType || '';
-  return /javascript|ecmascript/i.test(mime) || /\.m?js$/i.test(url.pathname) || entry._resourceType === 'script';
+  const collector = new URL(endpoint);
+  if (url.origin === collector.origin || (['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && url.port === collector.port)) return false;
+  return /javascript|ecmascript/i.test(entry.response.content?.mimeType || '') || /\.m?js$/i.test(url.pathname) || entry._resourceType === 'script';
 }
 const clean = value => String(value ?? '').replace(/[\r\n]/g, ' ');
 const canonical = name => name.toLowerCase().split('-').map(part => part[0]?.toUpperCase() + part.slice(1)).join('-');
@@ -44,16 +43,4 @@ export function makePayload(entry, body, encoding = '') {
   };
   if (byteLength(JSON.stringify(payload)) > MAX_BYTES) throw new Error('Serialized payload exceeds 5 MiB');
   return payload;
-}
-export function readContent(entry, timeout = 5000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('Response body unavailable (DevTools timeout)')), timeout);
-    try {
-      entry.getContent((body, encoding) => {
-        clearTimeout(timer);
-        if (typeof body !== 'string') reject(new Error('Response body unavailable'));
-        else resolve({ body, encoding });
-      });
-    } catch (error) { clearTimeout(timer); reject(error); }
-  });
 }

@@ -1,7 +1,7 @@
 # Privacy
 
-JXScout Chrome captures JavaScript requests only after you click Start capture in a tab's DevTools panel. It forwards the URL, available request headers and body, response headers, and JavaScript response body to `http://localhost:3333/caido-ingest`.
+When On, JXScout Chrome captures successful JavaScript GET responses from regular HTTP(S) tabs. It sends captured URLs, request and response headers, and JavaScript bodies to your configured HTTP JXScout server at `/caido-ingest`. Headers may contain cookies or authorization credentials.
 
-Captured headers can contain credentials. No data is sent to a developer-operated service. The extension has no analytics, telemetry, remote code, or persistent traffic storage. The last 100 delivery URLs and errors remain in memory until DevTools closes. Your local JXScout server controls any further processing and retention.
+The extension stores only its On/Off setting, host, and port. It has no analytics or telemetry and does not persist captured traffic. JXScout controls server-side processing and retention.
 
-Pause stops new deliveries and clears the waiting queue; deliveries already submitted may complete. Closing DevTools ends the capture session.
+Off stops capture and disconnects the tab debuggers. Deliveries already sent may complete. Chrome's debugger permission is used to read response bodies without opening DevTools; HTTP host access allows sending them to your chosen server.

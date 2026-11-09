@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { shouldCapture, makePayload, readContent, MAX_BYTES } from '../extension/core.js';
+import { shouldCapture, makePayload, MAX_BYTES } from '../extension/core.js';
 
 export const entry = () => ({
   request: { url: 'https://app.example.com:8443/app.js?v=2', method: 'GET', httpVersion: 'h2', headers: [{ name: ':authority', value: 'app.example.com' }, { name: 'referer', value: 'https://app.example.com/' }] },
@@ -9,17 +9,17 @@ export const entry = () => ({
 
 test('capture includes only successful GET JavaScript and excludes the collector', () => {
   const e = entry();
-  assert.equal(shouldCapture(e), true);
+  assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), true);
   e.request.url = 'https://example.com/'; e.response.content.mimeType = 'text/html';
-  assert.equal(shouldCapture(e), false);
+  assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), false);
   e.response.content.mimeType = 'application/javascript';
-  assert.equal(shouldCapture(e), true);
+  assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), true);
   e.request.url = 'http://localhost:3333/app.js';
-  assert.equal(shouldCapture(e), false);
+  assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), false);
   e.request.url = 'https://example.com/app.mjs'; e.response.content.mimeType = '';
-  assert.equal(shouldCapture(e), true);
-  e.response.status = 404; assert.equal(shouldCapture(e), false);
-  e.response.status = 200; e.request.method = 'POST'; assert.equal(shouldCapture(e), false);
+  assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), true);
+  e.response.status = 404; assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), false);
+  e.response.status = 200; e.request.method = 'POST'; assert.equal(shouldCapture(e, 'http://localhost:3333/caido-ingest'), false);
 });
 
 test('HAR serializes for upstream parser, retaining ports and normalizing HTTP/2', () => {
@@ -46,9 +46,4 @@ test('POST bodies and missing HAR headers still produce valid ingestion envelope
   const p = makePayload(e, '');
   assert.match(p.request, /Host: .*\r\nContent-Length: 3\r\n\r\na=1$/);
   assert.match(p.response, /Content-Type: application\/javascript\r\nContent-Length: 0/);
-});
-
-test('missing response body callbacks time out', async () => {
-  await assert.rejects(readContent({ getContent() {} }, 5), /timeout/);
-  await assert.rejects(readContent({ getContent(cb) { cb(undefined); } }), /unavailable/);
 });

@@ -1,18 +1,26 @@
 {
   "manifest_version": 3,
   "name": "JXScout Chrome",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minimum_chrome_version": "120",
-  "description": "Send captured JavaScript responses to your local JXScout server on port 3333.",
-  "devtools_page": "devtools.html",
+  "description": "Forward JavaScript to JXScout. Toggle capture and set your server host and port from the toolbar.",
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
   "host_permissions": [
-    "http://localhost/*"
+    "http://*/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "JXScout"
+  },
+  "permissions": [
+    "debugger",
+    "storage",
+    "tabs"
+  ]
 }
