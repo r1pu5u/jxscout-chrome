@@ -11,7 +11,7 @@ const keyFor = (tabId, requestId) => `${tabId}:${requestId}`;
 const httpHeaders = headers => Object.entries(headers || {}).map(([name, value]) => ({ name, value: String(value) }));
 
 async function attach(tab) {
-  if (!settings.enabled || attached.has(tab.id) || !/^https?:/.test(tab.url || '')) return;
+  if (!settings.enabled || attached.has(tab.id) || !/^(https?:|about:blank$)/.test(tab.url || '')) return;
   const epoch = generation;
   try {
     await chrome.debugger.attach({ tabId: tab.id }, '1.3');
@@ -39,6 +39,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   ready.then(() => apply(message.settings)).then(() => respond({ ok: true }), error => respond({ error: error.message }));
   return true;
 });
+chrome.tabs.onCreated.addListener(tab => { ready.then(() => attach(tab)); });
 chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
   if (change.status === 'loading' || change.url) ready.then(() => attach(tab));
 });

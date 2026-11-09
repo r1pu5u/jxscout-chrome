@@ -1,6 +1,6 @@
 {
   "name": "jxscout-chrome",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "description": "Manifest V3 Chrome integration for JXScout",
