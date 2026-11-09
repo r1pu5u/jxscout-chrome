@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "JXScout Chrome",
+  "version": "1.0.0",
+  "minimum_chrome_version": "120",
+  "description": "Send captured JavaScript responses to your local JXScout server on port 3333.",
+  "devtools_page": "devtools.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "host_permissions": [
+    "http://localhost/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

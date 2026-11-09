@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JXScout</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+  <main>
+    <header><div><span class="eyebrow">CHROME · MANIFEST V3</span><h1>JXScout</h1></div><button id="toggle" disabled>Start capture</button></header>
+    <p>JavaScript from this tab → <code>localhost:3333/caido-ingest</code></p>
+    <p class="hint">Run <code>jxscout serve</code>, start capture, then reload your target page. Keep DevTools open. JXScout applies your project’s scope.</p>
+    <div class="summary"><span id="state">Paused</span><span><strong id="sent">0</strong> sent</span><span><strong id="failed">0</strong> failed</span><span id="pending">0 pending</span></div>
+    <p id="notice" role="status" aria-live="polite"></p>
+    <p id="empty" class="hint">No JavaScript sent yet.</p><ol id="events" aria-label="Recent deliveries"></ol>
+    <p class="hint">Sends JavaScript response bodies and captured HTTP headers to your local server. The extension keeps no traffic history after DevTools closes. Pausing clears queued work; already submitted deliveries may finish.</p>
+  </main><script type="module" src="panel.js"></script>
+</body></html>

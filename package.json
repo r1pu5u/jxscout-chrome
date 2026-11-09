@@ -1,0 +1,14 @@
+{
+  "name": "jxscout-chrome",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Manifest V3 Chrome DevTools integration for JXScout",
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check.mjs",
+    "build": "python3 scripts/package.py"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}
